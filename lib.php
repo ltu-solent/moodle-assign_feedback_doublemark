@@ -15,10 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'feedback_file', language 'en'
- *
  * @package   assignfeedback_doublemark
- * @copyright 2017 Southampton Solent University {@link mailto: ltu@solent.ac.uk}
+ * @copyright 2017 Southampton Solent University
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
  defined('MOODLE_INTERNAL') || die();
@@ -29,10 +27,7 @@
  * @param mixed $course course or id of the course
  * @param mixed $cm course module or id of the course module
  * @param context $context
- * @param string $filearea
  * @param array $args
- * @param bool $forcedownload
- * @return bool false if file not found, does not return if found - just send the file
  */
  function assignfeedback_doublemark_pluginfile($course,                                                                                    
                                         $cm,                                                                                        
@@ -45,8 +40,7 @@
     }                                                                                                                               
                                                                                                                                     
     require_login($course, false, $cm);                                                                                             
-    $itemid = (int)array_shift($args);                                                                                              
-    //$record = $DB->get_record('assign_grades', array('id'=>$itemid), 'userid,assignment', MUST_EXIST);                              
+    $itemid = (int)array_shift($args);                                                                                                                         
     $userid = $record->userid;                                                                                                      
                                                                                                                                     
     if (!$assign = $DB->get_record('assign', array('id'=>$cm->instance))) {                                                         
@@ -60,16 +54,5 @@
     // Check is users feedback or has grading permission.                                                                           
     if ($USER->id != $userid and !has_capability('mod/assign:grade', $context)) {                                                   
         return false;                                                                                                               
-    }                                                                                                                               
-                                                                                                                                    
-    //$relativepath = implode('/', $args);                                                                                            
-                                                                                                                                    
-    // $fullpath = "/{$context->id}/assignfeedback_file/$filearea/$itemid/$relativepath";                                              
-                                                                                                                                    
-    // $fs = get_file_storage();                                                                                                       
-    // if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {                                                 
-        // return false;                                                                                                               
-    // }                                                                                                                               
-    // // Download MUST be forced - security!                                                                                          
-    // send_stored_file($file, 0, 0, true);                                                                                            
+    }                                                                                     
 }

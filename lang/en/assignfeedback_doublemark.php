@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'feedback_file', language 'en'
+ * Strings for component 'feedback_doublemark', language 'en'
  *
  * @package   assignfeedback_doublemark
- * @copyright 2017 Southampton Solent University {@link mailto: ltu@solent.ac.uk}
+ * @copyright 2017 Southampton Solent University
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -27,6 +27,7 @@ $string['default'] = 'Default';
 $string['default_help'] = 'Default help';
 $string['doublemark'] = 'Double Marking';
 $string['enabled'] = 'Double Marking';
-$string['enabled_help'] = 'If enabled, the teacher will be able to enter double marking grades'; 
+$string['enabled_help'] = 	'<p>Double Marking of assessment elements must take place at Level 6 and Level 7:</p><ol type="i"><li>on all major projects, dissertations and portfolios; and</li>
+							<li>on any assessment which constitutes 100% of the weighting for units of 20 credit points or more for undergraduate programmes, and for 30 credit points or more for postgraduate taught courses.</li></ol><p>Academic Handbook, Section 2O: Assessment Policy, Paragraph 45</p>'; 
 $string['first_grade'] = 'First Grade'; 
 $string['second_grade'] = 'Second Grade'; 

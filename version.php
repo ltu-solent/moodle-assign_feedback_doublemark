@@ -15,8 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
  
 /**
- * @package   plugintype_pluginname
- * @copyright 2017 Southampton Solent University {@link mailto: ltu@solent.ac.uk}
+ * @package   assignfeedback_doublemark
+ * @copyright 2017 Southampton Solent University
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
  

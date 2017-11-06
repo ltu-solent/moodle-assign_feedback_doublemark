@@ -18,7 +18,7 @@
  * This file defines the admin settings for this plugin
  *
  * @package   assignfeedback_doublemark
- * @copyright 2017 Southampton Solent University {@link mailto: ltu@solent.ac.uk}
+ * @copyright 2017 Southampton Solent University
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

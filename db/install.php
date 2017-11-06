@@ -15,10 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'feedback_file', language 'en'
- *
  * @package   assignfeedback_doublemark
- * @copyright 2017 Southampton Solent University {@link mailto: ltu@solent.ac.uk}
+ * @copyright 2017 Southampton Solent University
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
  
