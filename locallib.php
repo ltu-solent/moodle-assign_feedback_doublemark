@@ -45,6 +45,7 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
     }
 
     public function get_form_elements_for_user($grade, MoodleQuickForm $mform, stdClass $data, $userid) {
+		global $USER;
         $scaleoptions = $this->get_scale();
 
         if ($grade) {
@@ -55,6 +56,7 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
             if ($doublemarks->first_grade != '-1') {
                 $select_first = $mform->addElement('select', 'assignfeedback_doublemark_first_grade', get_string('first_grade', 'assignfeedback_doublemark'), $scaleoptions);
                 $select_first->setSelected($doublemarks->first_grade);
+				$mform->addElement('hidden', 'grader1_hidden', $doublemarks->first_userid);
             } else {
                 $mform->addElement('select', 'assignfeedback_doublemark_first_grade', get_string('first_grade', 'assignfeedback_doublemark'), $scaleoptions);
             }
@@ -62,6 +64,7 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
             if ($doublemarks->second_grade != '-1') {
                 $select_second = $mform->addElement('select', 'assignfeedback_doublemark_second_grade', get_string('second_grade', 'assignfeedback_doublemark'), $scaleoptions);
                 $select_second->setSelected($doublemarks->second_grade);
+				$mform->addElement('hidden', 'grader2_hidden', $doublemarks->second_userid);
             } else {
                 $mform->addElement('select', 'assignfeedback_doublemark_second_grade', get_string('second_grade', 'assignfeedback_doublemark'), $scaleoptions);
             }
@@ -72,11 +75,11 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
             $mform->addElement('select', 'assignfeedback_doublemark_second_grade', get_string('second_grade', 'assignfeedback_doublemark'), $scaleoptions);
             $mform->addElement('hidden', 'first_hidden', -1);
             $mform->addElement('hidden', 'second_hidden', -1);
-        }
-
-        
+        }        
         
 		$mform->disabledIf('assignfeedback_doublemark_second_grade', 'first_hidden', 'eq', -1);
+		$mform->disabledIf('assignfeedback_doublemark_second_grade', 'grader1_hidden', 'eq', $USER->id);
+		$mform->disabledIf('assignfeedback_doublemark_first_grade', 'grader1_hidden', 'neq', $USER->id);
 
         return true;
     }
