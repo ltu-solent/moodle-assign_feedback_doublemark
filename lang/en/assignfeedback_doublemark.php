@@ -31,3 +31,4 @@ $string['enabled_help'] = 	'<p>Double Marking of assessment elements must take p
 							<li>on any assessment which constitutes 100% of the weighting for units of 20 credit points or more for undergraduate programmes, and for 30 credit points or more for postgraduate taught courses.</li></ol><p>Academic Handbook, Section 2O: Assessment Policy, Paragraph 45</p>'; 
 $string['first_grade'] = 'First Grade'; 
 $string['second_grade'] = 'Second Grade'; 
+$string['not_available'] = '<p><b>Double Marks not available when grading with Points - use the Solent numeric scale instead</b></p>'; 
