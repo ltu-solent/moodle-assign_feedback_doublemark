@@ -1,26 +1,26 @@
-<?xml version="1.0" encoding="UTF-8" ?>                                                                                             
-<XMLDB PATH="mod/assign/feedback/doublemark/db" VERSION="2017102600" COMMENT="XMLDB file for Moodle mod/assign/feedback/doublemark"               
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"                                                                           
-    xsi:noNamespaceSchemaLocation="../../../../../lib/xmldb/xmldb.xsd"                                                              
->                                                                                                                                   
-  <TABLES>                                                                                                                          
-    <TABLE NAME="assignfeedback_doublemark" COMMENT="Stores info about double marking submitted by a grader.">                      
-      <FIELDS>                                                                                                                      
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>                                                    
-        <FIELD NAME="assignment" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>                               
-        <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>                                    
-        <FIELD NAME="first_grade" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/> 
-		<FIELD NAME="first_userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>  		
-        <FIELD NAME="second_grade" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>                                    
-        <FIELD NAME="second_userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>                           
-      </FIELDS>                                                                                                                     
-      <KEYS>                                                                                                                        
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Unique id for this feedback value."/>                               
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/assign/feedback/doublemark/db" VERSION="2017102600" COMMENT="XMLDB file for Moodle mod/assign/feedback/doublemark"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="assignfeedback_doublemark" COMMENT="Stores info about double marking submitted by a grader.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="assignment" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="first_grade" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="-1" SEQUENCE="false"/>
+		    <FIELD NAME="first_userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="second_grade" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="-1" SEQUENCE="false"/>
+        <FIELD NAME="second_userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Unique id for this feedback value."/>
         <KEY NAME="assignment" TYPE="foreign" FIELDS="assignment" REFTABLE="assign" REFFIELDS="id" COMMENT="The assignment instance this feedback relates to."/>
         <KEY NAME="grade" TYPE="foreign" FIELDS="grade" REFTABLE="assign_grades" REFFIELDS="id" COMMENT="The grade instance this feedback relates to."/>
         <KEY NAME="first_userid" TYPE="foreign" FIELDS="first_userid" REFTABLE="user" REFFIELDS="id" COMMENT="The user instance the first grade relates to."/>
         <KEY NAME="second_userid" TYPE="foreign" FIELDS="second_userid" REFTABLE="user" REFFIELDS="id" COMMENT="The user instance the second grade relates to."/>
-      </KEYS>                                                                                                                       
-    </TABLE>                                                                                                                        
-  </TABLES>                                                                                                                         
-</XMLDB>    
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>
