@@ -47,82 +47,85 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
     public function get_form_elements_for_user($grade, MoodleQuickForm $mform, stdClass $data, $userid) {
         global $USER;
         $scaleoptions = $this->get_scale();
-		if($scaleoptions){
-			if ($grade) {
-				$doublemarks = $this->get_doublemarks($grade->id);
-			}
+        if($scaleoptions){
+                if ($grade) {
+                        $doublemarks = $this->get_doublemarks($grade->id);
+                }
+                if($this->assignment->get_grade_item()->locked == 0){
+					if ($doublemarks) {
+							if ($doublemarks->first_grade != '-1') {
+									$select_first = $mform->addElement('select', 'assignfeedback_doublemark_first_grade', get_string('first_grade', 'assignfeedback_doublemark'), $scaleoptions);
+									$select_first->setSelected($doublemarks->first_grade);
+									$mform->addElement('hidden', 'grader1_hidden', $doublemarks->first_userid);
+							} else {
+									$mform->addElement('select', 'assignfeedback_doublemark_first_grade', get_string('first_grade', 'assignfeedback_doublemark'), $scaleoptions);
+							}
+							if ($doublemarks->second_grade != '-1') {
+									$select_second = $mform->addElement('select', 'assignfeedback_doublemark_second_grade', get_string('second_grade', 'assignfeedback_doublemark'), $scaleoptions);
+									$select_second->setSelected($doublemarks->second_grade);
+									$mform->addElement('hidden', 'grader2_hidden', $doublemarks->second_userid);
+							} else {
+									$mform->addElement('select', 'assignfeedback_doublemark_second_grade', get_string('second_grade', 'assignfeedback_doublemark'), $scaleoptions);
+							}
+							$mform->addElement('hidden', 'first_hidden', $doublemarks->first_grade);
+							$mform->addElement('hidden', 'second_hidden', $doublemarks->second_grade);
+					} else {
+							$mform->addElement('select', 'assignfeedback_doublemark_first_grade', get_string('first_grade', 'assignfeedback_doublemark'), $scaleoptions);
+							$mform->addElement('select', 'assignfeedback_doublemark_second_grade', get_string('second_grade', 'assignfeedback_doublemark'), $scaleoptions);
+							$mform->addElement('hidden', 'first_hidden', -1);
+							$mform->addElement('hidden', 'second_hidden', -1);
+					}
+                }else{
+                    $mform->addElement('static', 'description', get_string('first_grade', 'assignfeedback_doublemark'), $scaleoptions[$doublemarks->first_grade]);
+                    $mform->addElement('static', 'description', get_string('second_grade', 'assignfeedback_doublemark'), $scaleoptions[$doublemarks->second_grade]);
+                }	
+                // Re-arrange form elements so double marking comes first
+                // get the header
+                $elements0 = array_splice($mform->_elements, 0, 1);
+                // get the double marks elements
+                $elements1 = array_splice($mform->_elements, 3);
+                //reconstruct elements
+                $mform->_elements = array_merge($elements0, $elements1, $mform->_elements);
 
-			if ($doublemarks) {
-				if ($doublemarks->first_grade != '-1') {
-					$select_first = $mform->addElement('select', 'assignfeedback_doublemark_first_grade', get_string('first_grade', 'assignfeedback_doublemark'), $scaleoptions);
-					$select_first->setSelected($doublemarks->first_grade);
-					$mform->addElement('hidden', 'grader1_hidden', $doublemarks->first_userid);
-				} else {
-					$mform->addElement('select', 'assignfeedback_doublemark_first_grade', get_string('first_grade', 'assignfeedback_doublemark'), $scaleoptions);
-				}
-				if ($doublemarks->second_grade != '-1') {
-					$select_second = $mform->addElement('select', 'assignfeedback_doublemark_second_grade', get_string('second_grade', 'assignfeedback_doublemark'), $scaleoptions);
-					$select_second->setSelected($doublemarks->second_grade);
-					$mform->addElement('hidden', 'grader2_hidden', $doublemarks->second_userid);
-				} else {
-					$mform->addElement('select', 'assignfeedback_doublemark_second_grade', get_string('second_grade', 'assignfeedback_doublemark'), $scaleoptions);
-				}
-				$mform->addElement('hidden', 'first_hidden', $doublemarks->first_grade);
-				$mform->addElement('hidden', 'second_hidden', $doublemarks->second_grade);
-			} else {
-				$mform->addElement('select', 'assignfeedback_doublemark_first_grade', get_string('first_grade', 'assignfeedback_doublemark'), $scaleoptions);
-				$mform->addElement('select', 'assignfeedback_doublemark_second_grade', get_string('second_grade', 'assignfeedback_doublemark'), $scaleoptions);
-				$mform->addElement('hidden', 'first_hidden', -1);
-				$mform->addElement('hidden', 'second_hidden', -1);
-			}
+                foreach ($mform->_elements as $key => $value) {
+                        if (array_key_exists($value->_attributes['name'], $mform->_elementIndex)) {
+                                $mform->_elementIndex[$value->_attributes['name']] = $key;
+                        }
+                }
 
-			// Re-arrange form elements so double marking comes first
-			// get the header
-			$elements0 = array_splice($mform->_elements, 0, 1);
-			// get the double marks elements
-			$elements1 = array_splice($mform->_elements, 3);
-			//reconstruct elements
-			$mform->_elements = array_merge($elements0, $elements1, $mform->_elements);
+                $mform->addElement('html', '<script type="text/javascript">
+                                document.getElementById("id_assignfeedback_doublemark_first_grade").onchange = function () {
+                                        document.getElementById("id_assignfeedback_doublemark_second_grade").disabled = true;
+                                };
+                                document.getElementById("id_assignfeedback_doublemark_second_grade").onchange = function () {
+                                        document.getElementById("id_assignfeedback_doublemark_first_grade").disabled = true;
+                                };
+                                </script>');
 
-			foreach ($mform->_elements as $key => $value) {
-				if (array_key_exists($value->_attributes['name'], $mform->_elementIndex)) {
-					$mform->_elementIndex[$value->_attributes['name']] = $key;
-				}
-			}
+                if($doublemarks->first_grade != -1){
+                        $mform->disabledIf('assignfeedback_doublemark_first_grade', 'grader1_hidden', 'neq', $USER->id);
+                        $mform->disabledIf('assignfeedback_doublemark_second_grade', 'grader1_hidden', 'eq', $USER->id);
+                }
+                if($doublemarks->second_grade != -1){
+                        $mform->disabledIf('assignfeedback_doublemark_second_grade', 'grader2_hidden', 'neq', $USER->id);
+                        $mform->disabledIf('assignfeedback_doublemark_first_grade', 'grader2_hidden', 'eq', $USER->id);
+                }
+        }else{
+                $mform->addElement('html', get_string('not_available','assignfeedback_doublemark'));
+                // Re-arrange form elements so double marking comes first
+                // get the header
+                $elements0 = array_splice($mform->_elements, 0, 1);
+                // get the double marks element
+                $elements1 = array_splice($mform->_elements, -1, 1);
+                //reconstruct elements
+                $mform->_elements = array_merge($elements0, $elements1, $mform->_elements);
 
-			$mform->addElement('html', '<script type="text/javascript">
-					document.getElementById("id_assignfeedback_doublemark_first_grade").onchange = function () {
-						document.getElementById("id_assignfeedback_doublemark_second_grade").disabled = true;
-					};
-					document.getElementById("id_assignfeedback_doublemark_second_grade").onchange = function () {
-						document.getElementById("id_assignfeedback_doublemark_first_grade").disabled = true;
-					};
-					</script>');
-
-			if($doublemarks->first_grade != -1){
-				$mform->disabledIf('assignfeedback_doublemark_first_grade', 'grader1_hidden', 'neq', $USER->id);
-				$mform->disabledIf('assignfeedback_doublemark_second_grade', 'grader1_hidden', 'eq', $USER->id);
-			}
-			if($doublemarks->second_grade != -1){
-				$mform->disabledIf('assignfeedback_doublemark_second_grade', 'grader2_hidden', 'neq', $USER->id);
-				$mform->disabledIf('assignfeedback_doublemark_first_grade', 'grader2_hidden', 'eq', $USER->id);
-			}
-		}else{
-			$mform->addElement('html', get_string('not_available','assignfeedback_doublemark'));
-			// Re-arrange form elements so double marking comes first
-			// get the header
-			$elements0 = array_splice($mform->_elements, 0, 1);
-			// get the double marks element
-			$elements1 = array_splice($mform->_elements, -1, 1);
-			//reconstruct elements
-			$mform->_elements = array_merge($elements0, $elements1, $mform->_elements);
-
-			foreach ($mform->_elements as $key => $value) {
-				if (array_key_exists($value->_attributes['name'], $mform->_elementIndex)) {
-					$mform->_elementIndex[$value->_attributes['name']] = $key;
-				}
-			}
-		}
+                foreach ($mform->_elements as $key => $value) {
+                        if (array_key_exists($value->_attributes['name'], $mform->_elementIndex)) {
+                                $mform->_elementIndex[$value->_attributes['name']] = $key;
+                        }
+                }
+        }
 
         return true;
     }
