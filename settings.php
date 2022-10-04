@@ -21,6 +21,7 @@
  * @copyright 2017 Southampton Solent University
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
 $settings->add(new admin_setting_configcheckbox('assignfeedback_doublemark/default',
                    new lang_string('default', 'assignfeedback_doublemark'),

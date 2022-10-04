@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,23 +15,42 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Double mark locallib
  * @package   assignfeedback_doublemark
  * @copyright 2017 Southampton Solent University
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Double mark feedback class
+ */
 class assign_feedback_doublemark extends assign_feedback_plugin {
 
+    /**
+     * Get the name of the doublemark feedback plugin.
+     *
+     * @return string
+     */
     public function get_name() {
         return get_string('doublemark', 'assignfeedback_doublemark');
     }
 
+    /**
+     * Get the doublemark record, if it exists.
+     *
+     * @param int $gradeid
+     * @return stdClass|false False if it doesn't exist.
+     */
     public function get_doublemarks($gradeid) {
         global $DB;
         return $DB->get_record('assignfeedback_doublemark', array('grade' => $gradeid));
     }
 
+    /**
+     * Get the scale menu used by the assignment
+     *
+     * @return array
+     */
     public function get_scale() {
         global $DB;
         $scale = $DB->get_record('scale', array('id' => $this->assignment->get_grade_item()->scaleid));
@@ -41,90 +59,137 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
             $scaleoptions = make_menu_from_list($scale->scale);
             $scaleoptions = $nograde + $scaleoptions;
         }
+        // What happens if there's no scale?
         return $scaleoptions;
     }
 
+    /**
+     * Get form elements for the grading page
+     *
+     * @param stdClass|null $grade
+     * @param MoodleQuickForm $mform
+     * @param stdClass $data
+     * @param int $userid
+     * @return bool true if elements were added to the form
+     */
     public function get_form_elements_for_user($grade, MoodleQuickForm $mform, stdClass $data, $userid) {
         global $USER;
         $scaleoptions = $this->get_scale();
-        if($scaleoptions){
-                if ($grade) {
-                        $doublemarks = $this->get_doublemarks($grade->id);
+        if ($scaleoptions) {
+            if ($grade) {
+                $doublemarks = $this->get_doublemarks($grade->id);
+            }
+            if ($this->assignment->get_grade_item()->locked == 0) {
+                // If any grades have been saved, add them to the form.
+                if ($doublemarks) {
+                    // First marker has already graded. Set grade and hidden userid field for first marker.
+                    if ($doublemarks->first_grade != '-1') {
+                        $selectfirst = $mform->addElement(
+                            'select',
+                            'assignfeedback_doublemark_first_grade',
+                            get_string('first_grade', 'assignfeedback_doublemark'),
+                            $scaleoptions);
+                        $selectfirst->setSelected($doublemarks->first_grade);
+                        $mform->addElement('hidden', 'grader1_hidden', $doublemarks->first_userid);
+                    } else {
+                        // Display grade options for First marker.
+                        $mform->addElement(
+                            'select',
+                            'assignfeedback_doublemark_first_grade',
+                            get_string('first_grade', 'assignfeedback_doublemark'),
+                            $scaleoptions);
+                    }
+                    // Second marker has already graded. Set grade and hidden userid field for the second marker.
+                    if ($doublemarks->second_grade != '-1') {
+                        $selectsecond = $mform->addElement(
+                            'select',
+                            'assignfeedback_doublemark_second_grade',
+                            get_string('second_grade', 'assignfeedback_doublemark'),
+                            $scaleoptions);
+                        $selectsecond->setSelected($doublemarks->second_grade);
+                        $mform->addElement('hidden', 'grader2_hidden', $doublemarks->second_userid);
+                    } else {
+                        // Display grade options for Second marker.
+                        $mform->addElement('select',
+                            'assignfeedback_doublemark_second_grade',
+                            get_string('second_grade', 'assignfeedback_doublemark'),
+                            $scaleoptions);
+                    }
+                    $mform->addElement('hidden', 'first_hidden', $doublemarks->first_grade);
+                    $mform->addElement('hidden', 'second_hidden', $doublemarks->second_grade);
+                } else {
+                    // No grades have been saved yet.
+                    $mform->addElement('select',
+                        'assignfeedback_doublemark_first_grade',
+                        get_string('first_grade', 'assignfeedback_doublemark'),
+                        $scaleoptions);
+                    $mform->addElement('select',
+                        'assignfeedback_doublemark_second_grade',
+                        get_string('second_grade', 'assignfeedback_doublemark'),
+                        $scaleoptions);
+                    $mform->addElement('hidden', 'first_hidden', -1);
+                    $mform->addElement('hidden', 'second_hidden', -1);
                 }
-                if($this->assignment->get_grade_item()->locked == 0){
-					if ($doublemarks) {
-							if ($doublemarks->first_grade != '-1') {
-									$select_first = $mform->addElement('select', 'assignfeedback_doublemark_first_grade', get_string('first_grade', 'assignfeedback_doublemark'), $scaleoptions);
-									$select_first->setSelected($doublemarks->first_grade);
-									$mform->addElement('hidden', 'grader1_hidden', $doublemarks->first_userid);
-							} else {
-									$mform->addElement('select', 'assignfeedback_doublemark_first_grade', get_string('first_grade', 'assignfeedback_doublemark'), $scaleoptions);
-							}
-							if ($doublemarks->second_grade != '-1') {
-									$select_second = $mform->addElement('select', 'assignfeedback_doublemark_second_grade', get_string('second_grade', 'assignfeedback_doublemark'), $scaleoptions);
-									$select_second->setSelected($doublemarks->second_grade);
-									$mform->addElement('hidden', 'grader2_hidden', $doublemarks->second_userid);
-							} else {
-									$mform->addElement('select', 'assignfeedback_doublemark_second_grade', get_string('second_grade', 'assignfeedback_doublemark'), $scaleoptions);
-							}
-							$mform->addElement('hidden', 'first_hidden', $doublemarks->first_grade);
-							$mform->addElement('hidden', 'second_hidden', $doublemarks->second_grade);
-					} else {
-							$mform->addElement('select', 'assignfeedback_doublemark_first_grade', get_string('first_grade', 'assignfeedback_doublemark'), $scaleoptions);
-							$mform->addElement('select', 'assignfeedback_doublemark_second_grade', get_string('second_grade', 'assignfeedback_doublemark'), $scaleoptions);
-							$mform->addElement('hidden', 'first_hidden', -1);
-							$mform->addElement('hidden', 'second_hidden', -1);
-					}
-                }else{
-                    $mform->addElement('static', 'description', get_string('first_grade', 'assignfeedback_doublemark'), $scaleoptions[$doublemarks->first_grade]);
-                    $mform->addElement('static', 'description', get_string('second_grade', 'assignfeedback_doublemark'), $scaleoptions[$doublemarks->second_grade]);
-                }	
-                // Re-arrange form elements so double marking comes first
-                // get the header
-                $elements0 = array_splice($mform->_elements, 0, 1);
-                // get the double marks elements
-                $elements1 = array_splice($mform->_elements, 3);
-                //reconstruct elements
-                $mform->_elements = array_merge($elements0, $elements1, $mform->_elements);
+            } else {
+                // Grades have been locked for this assignment, so display the grades as text rather than a form.
+                $mform->addElement('static',
+                    'description',
+                    get_string('first_grade', 'assignfeedback_doublemark'),
+                    $scaleoptions[$doublemarks->first_grade]);
+                $mform->addElement('static',
+                    'description',
+                    get_string('second_grade', 'assignfeedback_doublemark'),
+                    $scaleoptions[$doublemarks->second_grade]);
+            }
+            // Re-arrange form elements so double marking comes first.
+            // Get the header.
+            $elements0 = array_splice($mform->_elements, 0, 1);
+            // Get the double marks elements.
+            $elements1 = array_splice($mform->_elements, 3);
+            // Reconstruct elements.
+            $mform->_elements = array_merge($elements0, $elements1, $mform->_elements);
 
-                foreach ($mform->_elements as $key => $value) {
-                        if (array_key_exists($value->_attributes['name'], $mform->_elementIndex)) {
-                                $mform->_elementIndex[$value->_attributes['name']] = $key;
-                        }
+            foreach ($mform->_elements as $key => $value) {
+                if (array_key_exists($value->_attributes['name'], $mform->_elementIndex)) {
+                    $mform->_elementIndex[$value->_attributes['name']] = $key;
                 }
+            }
 
-                $mform->addElement('html', '<script type="text/javascript">
-                                document.getElementById("id_assignfeedback_doublemark_first_grade").onchange = function () {
-                                        document.getElementById("id_assignfeedback_doublemark_second_grade").disabled = true;
-                                };
-                                document.getElementById("id_assignfeedback_doublemark_second_grade").onchange = function () {
-                                        document.getElementById("id_assignfeedback_doublemark_first_grade").disabled = true;
-                                };
-                                </script>');
+            // Disable the grade selector for the opposite marker to prevent them entering both grades.
+            $mform->addElement('html', '<script type="text/javascript">
+                            document.getElementById("id_assignfeedback_doublemark_first_grade").onchange = function () {
+                                    document.getElementById("id_assignfeedback_doublemark_second_grade").disabled = true;
+                            };
+                            document.getElementById("id_assignfeedback_doublemark_second_grade").onchange = function () {
+                                    document.getElementById("id_assignfeedback_doublemark_first_grade").disabled = true;
+                            };
+                            </script>');
+            // Might be "false" if the double marks record doesn't exist. In which case, there's no need to disable.
+            if ($doublemarks) {
+                if ($doublemarks->first_grade != '-1') {
+                    $mform->disabledIf('assignfeedback_doublemark_first_grade', 'grader1_hidden', 'neq', $USER->id);
+                    $mform->disabledIf('assignfeedback_doublemark_second_grade', 'grader1_hidden', 'eq', $USER->id);
+                }
+                if ($doublemarks->second_grade != '-1') {
+                    $mform->disabledIf('assignfeedback_doublemark_second_grade', 'grader2_hidden', 'neq', $USER->id);
+                    $mform->disabledIf('assignfeedback_doublemark_first_grade', 'grader2_hidden', 'eq', $USER->id);
+                }
+            }
+        } else {
+            $mform->addElement('html', get_string('not_available', 'assignfeedback_doublemark'));
+            // Re-arrange form elements so double marking comes first
+            // Get the header.
+            $elements0 = array_splice($mform->_elements, 0, 1);
+            // Get the double marks element.
+            $elements1 = array_splice($mform->_elements, -1, 1);
+            // Reconstruct elements.
+            $mform->_elements = array_merge($elements0, $elements1, $mform->_elements);
 
-                if($doublemarks->first_grade != -1){
-                        $mform->disabledIf('assignfeedback_doublemark_first_grade', 'grader1_hidden', 'neq', $USER->id);
-                        $mform->disabledIf('assignfeedback_doublemark_second_grade', 'grader1_hidden', 'eq', $USER->id);
+            foreach ($mform->_elements as $key => $value) {
+                if (array_key_exists($value->_attributes['name'], $mform->_elementIndex)) {
+                    $mform->_elementIndex[$value->_attributes['name']] = $key;
                 }
-                if($doublemarks->second_grade != -1){
-                        $mform->disabledIf('assignfeedback_doublemark_second_grade', 'grader2_hidden', 'neq', $USER->id);
-                        $mform->disabledIf('assignfeedback_doublemark_first_grade', 'grader2_hidden', 'eq', $USER->id);
-                }
-        }else{
-                $mform->addElement('html', get_string('not_available','assignfeedback_doublemark'));
-                // Re-arrange form elements so double marking comes first
-                // get the header
-                $elements0 = array_splice($mform->_elements, 0, 1);
-                // get the double marks element
-                $elements1 = array_splice($mform->_elements, -1, 1);
-                //reconstruct elements
-                $mform->_elements = array_merge($elements0, $elements1, $mform->_elements);
-
-                foreach ($mform->_elements as $key => $value) {
-                        if (array_key_exists($value->_attributes['name'], $mform->_elementIndex)) {
-                                $mform->_elementIndex[$value->_attributes['name']] = $key;
-                        }
-                }
+            }
         }
 
         return true;
@@ -133,9 +198,9 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
     /**
      * Get the double marking grades from the database.
      *
-     * @param int $gradeid
-     * @return stdClass|false The double marking grades for the given grade if it exists.
-     *                        False if it doesn't.
+     * @param stdClass $grade
+     * @param stdClass $data Data from the form submission
+     * @return boolean True if the feedback has been modified, else False.
      */
     public function is_feedback_modified(stdClass $grade, stdClass $data) {
         if ($grade) {
@@ -153,19 +218,33 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
         return true;
     }
 
+    /**
+     * Saving the grades into database.
+     *
+     * @param stdClass $grade
+     * @param stdClass $data
+     * @return bool
+     */
     public function save(stdClass $grade, stdClass $data) {
         global $DB, $USER;
         $doublemarks = $this->get_doublemarks($grade->id);
         if ($doublemarks) {
+            // Does this assume the first marker always completes first?
             $first = $data->assignfeedback_doublemark_first_grade;
-            $second = $data->assignfeedback_doublemark_first_grade;
 
-            if (isset($data->assignfeedback_doublemark_first_grade) && $data->assignfeedback_doublemark_first_grade !== $doublemarks->first_grade) {
+            if (isset($data->assignfeedback_doublemark_first_grade)
+                    && $data->assignfeedback_doublemark_first_grade !== $doublemarks->first_grade) {
                 $doublemarks->first_grade = $first;
                 $doublemarks->first_userid = ($data->assignfeedback_doublemark_first_grade == -1 ? 0 : $USER->id);
-            } else if (isset($data->assignfeedback_doublemark_second_grade) && $data->assignfeedback_doublemark_second_grade !== $doublemarks->second_grade) {
-                $doublemarks->second_grade = ($data->assignfeedback_doublemark_second_grade != null || $data->assignfeedback_doublemark_second_grade != -1) ? $data->assignfeedback_doublemark_second_grade : -1;
-                //$doublemarks->second_grade = $second;
+            } else if (isset($data->assignfeedback_doublemark_second_grade)
+                    && $data->assignfeedback_doublemark_second_grade !== $doublemarks->second_grade) {
+                $doublemarks->second_grade =
+                (
+                    $data->assignfeedback_doublemark_second_grade != null ||
+                    $data->assignfeedback_doublemark_second_grade != -1
+                )
+                ? $data->assignfeedback_doublemark_second_grade
+                : -1;
                 $doublemarks->second_userid = ($data->assignfeedback_doublemark_second_grade == -1 ? 0 : $USER->id);
             }
 
@@ -186,7 +265,7 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
     }
 
     /**
-     * Display the comment in the feedback table.
+     * Display the grades in the feedback table.
      *
      * @param stdClass $grade
      * @param bool $showviewlink Set to true to show a link to view the full feedback
@@ -194,27 +273,34 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
      */
     public function view_summary(stdClass $grade, & $showviewlink) {
         global $DB;
-		$scaleoptions = $this->get_scale();
-		if($scaleoptions){
-			$doublemarks = $this->get_doublemarks($grade->id);
-			if ($doublemarks) {
-				
-				$first_grader = $DB->get_record('user', array('id' => $doublemarks->first_userid));
-				$second_grader = $DB->get_record('user', array('id' => $doublemarks->second_userid));
-				$grades = '';
-				
-				if($doublemarks->first_grade != -1 && $doublemarks->second_grade != -1){
-					$grades .= '<ol style="margin:0;"><li>' . $scaleoptions[$doublemarks->first_grade] . " - " . $first_grader->firstname . " " . $first_grader->lastname . '</li>';
-					$grades .= '<li>' . $scaleoptions[$doublemarks->second_grade] . " - " . $second_grader->firstname . " " . $second_grader->lastname . '</li></ol>';
-				}else if ($doublemarks->first_grade != -1 && $doublemarks->second_grade == -1) {
-					$grades .= '<ol style="margin:0;"><li>' . $scaleoptions[$doublemarks->first_grade] . " - " . $first_grader->firstname . " " . $first_grader->lastname . '</li></ol>';
-				}else if ($doublemarks->first_grade == -1 && $doublemarks->second_grade != -1) {
-					$grades .= '<ol start="2" style="margin:0;"><li>' . $scaleoptions[$doublemarks->second_grade] . " - " . $second_grader->firstname . " " . $second_grader->lastname . '</li></ol>';
-				} 
-				
-				return format_text($grades, FORMAT_HTML);
-			}
-		}
+        $scaleoptions = $this->get_scale();
+        if (!$scaleoptions) {
+            return '';
+        }
+
+        $doublemarks = $this->get_doublemarks($grade->id);
+        if ($doublemarks) {
+            $firstgrader = $DB->get_record('user', array('id' => $doublemarks->first_userid));
+            $secondgrader = $DB->get_record('user', array('id' => $doublemarks->second_userid));
+            $grades = '';
+            // Both grades have been set.
+            if ($doublemarks->first_grade != -1 && $doublemarks->second_grade != -1) {
+                $grades .= '<ol style="margin:0;">
+                    <li>' . $scaleoptions[$doublemarks->first_grade] .
+                        " - " . fullname($firstgrader) . '</li>';
+                $grades .= '<li>' . $scaleoptions[$doublemarks->second_grade] . " - " . fullname($secondgrader) . '</li></ol>';
+            } else if ($doublemarks->first_grade != -1 && $doublemarks->second_grade == -1) {
+                // Only first grade has been set.
+                $grades .= '<ol style="margin:0;">
+                    <li>' . $scaleoptions[$doublemarks->first_grade] . " - " . fullname($firstgrader) . '</li></ol>';
+            } else if ($doublemarks->first_grade == -1 && $doublemarks->second_grade != -1) {
+                // Only the second grade has been set. Start list count at 2.
+                $grades .= '<ol start="2" style="margin:0;">
+                    <li>' . $scaleoptions[$doublemarks->second_grade] . " - " . fullname($secondgrader) . '</li></ol>';
+            }
+            return format_text($grades, FORMAT_HTML);
+        }
+
         return '';
     }
 

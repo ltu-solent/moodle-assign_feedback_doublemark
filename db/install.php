@@ -15,19 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Install file for doublemark
  * @package   assignfeedback_doublemark
  * @copyright 2017 Southampton Solent University
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
-function xmldb_assignfeedback_doublemark_install() {                                                                                      
-    global $CFG;                                                                                                                    
-                                                                                                                                    
-    require_once($CFG->dirroot . '/mod/assign/adminlib.php');                                                                       
-                                                                                                                                    
-    // Set the correct initial order for the plugins.                                                                               
-    $pluginmanager = new assign_plugin_manager('assignfeedback');                                                                   
-    $pluginmanager->move_plugin('file', 'down');                                                                                    
-                                                                                                                                    
-    return true;                                                                                                                    
-}     
+
+/**
+ * Install function
+ *
+ * @return bool success
+ */
+function xmldb_assignfeedback_doublemark_install() {
+    global $CFG;
+    require_once($CFG->dirroot . '/mod/assign/adminlib.php');
+    // Set the correct initial order for the plugins.
+    $pluginmanager = new assign_plugin_manager('assignfeedback');
+    $pluginmanager->move_plugin('file', 'down');
+
+    return true;
+}
