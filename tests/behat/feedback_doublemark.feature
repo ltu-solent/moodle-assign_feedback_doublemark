@@ -31,6 +31,9 @@ Feature: In an assignment, teachers can provide doublemarks on student submissio
       | name                                | Test assignment name |
       | assignsubmission_onlinetext_enabled | 1                    |
       | assignfeedback_doublemark_enabled   | 1                    |
+    And the following "mod_assign > submissions" exist:
+      | assign                | user      | onlinetext                   |
+      | Test assignment name  | student1  | I'm the student1 submission  |
 
   @javascript
   Scenario: Two teachers should be able to be first or second markers
@@ -41,33 +44,24 @@ Feature: In an assignment, teachers can provide doublemarks on student submissio
     And I set the field "grade[modgrade_type]" to "Scale"
     And I set the field "grade[modgrade_scale]" to "Grademark"
     And I press "Save and display"
-    And the following "mod_assign > submissions" exist:
-      | assign                | user      | onlinetext                   |
-      | Test assignment name  | student1  | I'm the student1 submission  |
-    And I am on the "Test assignment name" Activity page
-    And I follow "View all submissions"
+    And I am on the "Test assignment name" "assignfeedback_doublemark > View all submissions" page
     Then I click on "Grade" "link" in the "Student 1" "table_row"
-    And I wait until the page is ready
     And I set the field "First grade" to "A1"
     And I press "Save changes"
     Then the "Second grade" "select" should be disabled
     Given I log in as "teacher2"
-    And I am on the "Test assignment name" Activity page
-    And I follow "View all submissions"
+    And I am on the "Test assignment name" "assignfeedback_doublemark > View all submissions" page
     Then I click on "Grade" "link" in the "Student 1" "table_row"
     Then the "First grade" "select" should be disabled
     And I set the field "Second grade" to "B2"
     And I press "Save changes"
-    And I am on the "Test assignment name" Activity page
-    And I follow "View all submissions"
+    And I am on the "Test assignment name" "assignfeedback_doublemark > View all submissions" page
     Then "Student 1" row "Double Marking" column of "generaltable" table should contain "A1 - Teacher 1"
     And "Student 1" row "Double Marking" column of "generaltable" table should contain "B2 - Teacher 2"
     Given I log in as "teacher1"
-    And I am on the "Test assignment name" Activity page
-    And I follow "View all submissions"
+    And I am on the "Test assignment name" "assignfeedback_doublemark > View all submissions" page
     And I click on "Grade" "link" in the "Student 1" "table_row"
     And I set the field "Grade" to "A3"
     And I press "Save changes"
-    And I am on the "Test assignment name" Activity page
-    And I follow "View all submissions"
+    And I am on the "Test assignment name" "assignfeedback_doublemark > View all submissions" page
     Then "Student 1" row "Final grade" column of "generaltable" table should contain "A3"
