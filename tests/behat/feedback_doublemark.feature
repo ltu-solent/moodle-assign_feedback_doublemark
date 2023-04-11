@@ -1,4 +1,4 @@
-@mod @mod_assign @assignfeedback @assignfeedback_doublemark
+@mod @mod_assign @assignfeedback @assignfeedback_doublemark @sol @solassignfeedback
 Feature: In an assignment, teachers can provide doublemarks on student submissions
   In order to provide feedback to students on their assignments
   As a teacher, and second marker
@@ -61,7 +61,7 @@ Feature: In an assignment, teachers can provide doublemarks on student submissio
     Given I log in as "teacher1"
     And I am on the "Test assignment name" "assignfeedback_doublemark > View all submissions" page
     And I click on "Grade" "link" in the "Student 1" "table_row"
-    And I set the field "Grade" to "A3"
+    And I set the field "Agreed grade" to "A3"
     And I press "Save changes"
     And I am on the "Test assignment name" "assignfeedback_doublemark > View all submissions" page
     Then "Student 1" row "Final grade" column of "generaltable" table should contain "A3"
