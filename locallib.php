@@ -157,14 +157,14 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
 
             // Disable the grade selector for the opposite marker to prevent them entering both grades.
             $mform->addElement('html', '<script type="text/javascript">
-                            document.getElementById("id_assignfeedback_doublemark_first_grade").onchange = function () {
-                                    document.getElementById("id_assignfeedback_doublemark_second_grade").disabled = true;
-                            };
-                            document.getElementById("id_assignfeedback_doublemark_second_grade").onchange = function () {
-                                    document.getElementById("id_assignfeedback_doublemark_first_grade").disabled = true;
-                            };
-                            document.getElementById("id_grade_label").innerHTML = "' . get_string("agreedgrade", "assignfeedback_doublemark") . '";
-                            </script>');
+            document.getElementById("id_assignfeedback_doublemark_first_grade").onchange = function () {
+                    document.getElementById("id_assignfeedback_doublemark_second_grade").disabled = true;
+            };
+            document.getElementById("id_assignfeedback_doublemark_second_grade").onchange = function () {
+                    document.getElementById("id_assignfeedback_doublemark_first_grade").disabled = true;
+            };
+            document.getElementById("id_grade_label").innerHTML = "' . get_string("agreedgrade", "assignfeedback_doublemark") . '";
+            </script>');
             // Might be "false" if the double marks record doesn't exist. In which case, there's no need to disable.
             if ($doublemarks) {
                 if ($doublemarks->first_grade != '-1') {
