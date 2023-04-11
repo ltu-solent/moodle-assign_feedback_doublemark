@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['agreed'] = 'Agreed grade';
+$string['agreedgrade'] = 'Agreed grade';
 
 $string['default'] = 'Default';
 $string['default_help'] = 'Default help';

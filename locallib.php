@@ -163,6 +163,7 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
                             document.getElementById("id_assignfeedback_doublemark_second_grade").onchange = function () {
                                     document.getElementById("id_assignfeedback_doublemark_first_grade").disabled = true;
                             };
+                            document.getElementById("id_grade_label").innerHTML = "' . get_string("agreedgrade", "assignfeedback_doublemark") . '";
                             </script>');
             // Might be "false" if the double marks record doesn't exist. In which case, there's no need to disable.
             if ($doublemarks) {
