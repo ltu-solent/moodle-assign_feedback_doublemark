@@ -22,14 +22,21 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Double Marking';
+$string['agreed'] = 'Agreed grade';
+
 $string['default'] = 'Default';
 $string['default_help'] = 'Default help';
 $string['doublemark'] = 'Double Marking';
+
 $string['enabled'] = 'Double Marking';
 $string['enabled_help'] = '<p>Double Marking of assessment elements must take place at Level 6 and Level 7:</p><ol type="i"><li>on all major projects, dissertations and portfolios; and</li>
 <li>on any assessment which constitutes 100% of the weighting for units of 20 credit points or more for undergraduate programmes, and for 30 credit points or more for postgraduate taught courses.</li></ol>
 <p>Academic Handbook, Section 2O: Assessment Policy, Paragraph 45</p>';
+
 $string['first_grade'] = 'First grade';
-$string['second_grade'] = 'Second grade';
+
 $string['not_available'] = '<p><b>Double Marks not available when grading with Points - use the Solent numeric scale instead</b></p>';
+
+$string['pluginname'] = 'Double Marking';
+
+$string['second_grade'] = 'Second grade';
