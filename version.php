@@ -23,6 +23,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2017102603;
-$plugin->requires  = 2015111609;
+$plugin->version  = 2023041100;
+$plugin->requires = 2022041900;
+$plugin->release = "4.0";
 $plugin->component = 'assignfeedback_doublemark';
