@@ -89,8 +89,10 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
                             'assignfeedback_doublemark_first_grade',
                             get_string('first_grade', 'assignfeedback_doublemark'),
                             $scaleoptions);
+                        $mform->setType('assignfeedback_doublemark_first_grade', PARAM_INT);
                         $selectfirst->setSelected($doublemarks->first_grade);
                         $mform->addElement('hidden', 'grader1_hidden', $doublemarks->first_userid);
+                        $mform->setType('grader1_hidden', PARAM_INT);
                     } else {
                         // Display grade options for First marker.
                         $mform->addElement(
@@ -98,6 +100,7 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
                             'assignfeedback_doublemark_first_grade',
                             get_string('first_grade', 'assignfeedback_doublemark'),
                             $scaleoptions);
+                        $mform->setType('assignfeedback_doublemark_first_grade', PARAM_INT);
                     }
                     // Second marker has already graded. Set grade and hidden userid field for the second marker.
                     if ($doublemarks->second_grade != '-1') {
@@ -106,29 +109,38 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
                             'assignfeedback_doublemark_second_grade',
                             get_string('second_grade', 'assignfeedback_doublemark'),
                             $scaleoptions);
+                        $mform->setType('assignfeedback_doublemark_second_grade', PARAM_INT);
                         $selectsecond->setSelected($doublemarks->second_grade);
                         $mform->addElement('hidden', 'grader2_hidden', $doublemarks->second_userid);
+                        $mform->setType('grader2_hidden', PARAM_INT);
                     } else {
                         // Display grade options for Second marker.
                         $mform->addElement('select',
                             'assignfeedback_doublemark_second_grade',
                             get_string('second_grade', 'assignfeedback_doublemark'),
                             $scaleoptions);
+                        $mform->setType('assignfeedback_doublemark_second_grade', PARAM_INT);
                     }
                     $mform->addElement('hidden', 'first_hidden', $doublemarks->first_grade);
+                    $mform->setType('first_hidden', PARAM_INT);
                     $mform->addElement('hidden', 'second_hidden', $doublemarks->second_grade);
+                    $mform->setType('second_hidden', PARAM_INT);
                 } else {
                     // No grades have been saved yet.
                     $mform->addElement('select',
                         'assignfeedback_doublemark_first_grade',
                         get_string('first_grade', 'assignfeedback_doublemark'),
                         $scaleoptions);
+                    $mform->setType('assignfeedback_doublemark_first_grade', PARAM_INT);
                     $mform->addElement('select',
                         'assignfeedback_doublemark_second_grade',
                         get_string('second_grade', 'assignfeedback_doublemark'),
                         $scaleoptions);
+                    $mform->setType('assignfeedback_doublemark_second_grade', PARAM_INT);
                     $mform->addElement('hidden', 'first_hidden', -1);
+                    $mform->setType('first_hidden', PARAM_INT);
                     $mform->addElement('hidden', 'second_hidden', -1);
+                    $mform->setType('second_hidden', PARAM_INT);
                 }
             } else {
                 // Grades have been locked for this assignment, so display the grades as text rather than a form.
@@ -230,12 +242,9 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
         global $DB, $USER;
         $doublemarks = $this->get_doublemarks($grade->id);
         if ($doublemarks) {
-            // Does this assume the first marker always completes first?
-            $first = $data->assignfeedback_doublemark_first_grade;
-
             if (isset($data->assignfeedback_doublemark_first_grade)
                     && $data->assignfeedback_doublemark_first_grade !== $doublemarks->first_grade) {
-                $doublemarks->first_grade = $first;
+                $doublemarks->first_grade = $data->assignfeedback_doublemark_first_grade;;
                 $doublemarks->first_userid = ($data->assignfeedback_doublemark_first_grade == -1 ? 0 : $USER->id);
             } else if (isset($data->assignfeedback_doublemark_second_grade)
                     && $data->assignfeedback_doublemark_second_grade !== $doublemarks->second_grade) {
@@ -254,10 +263,10 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
             $doublemarks = new stdClass();
             $doublemarks->assignment = $this->assignment->get_instance()->id;
             $doublemarks->grade = $grade->id;
-            if ($data->assignfeedback_doublemark_first_grade) {
+            if (isset($data->assignfeedback_doublemark_first_grade)) {
                 $doublemarks->first_grade = $data->assignfeedback_doublemark_first_grade;
                 $doublemarks->first_userid = $USER->id;
-            } else if ($data->assignfeedback_doublemark_second_grade) {
+            } else if (isset($data->assignfeedback_doublemark_second_grade)) {
                 $doublemarks->second_grade = $data->assignfeedback_doublemark_second_grade;
                 $doublemarks->second_userid = $USER->id;
             }
