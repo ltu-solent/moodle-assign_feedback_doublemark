@@ -53,11 +53,22 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
      */
     public function get_scale() {
         global $DB;
-        $scale = $DB->get_record('scale', array('id' => $this->assignment->get_grade_item()->scaleid));
+        // If scaleid is NULL, then points is being used.
+        $gradeitem = $this->assignment->get_grade_item();
+        $scale = $DB->get_record('scale', ['id' => $gradeitem->scaleid]);
+        $scaleoptions = [];
         if ($scale) {
-            $nograde = array(-1 => "No grade");
+            $nograde = [-1 => get_string('nograde')];
             $scaleoptions = make_menu_from_list($scale->scale);
             $scaleoptions = $nograde + $scaleoptions;
+        } else if ($gradeitem->gradetype == GRADE_TYPE_VALUE) {
+            // If it's not a scale it's a grade, create a menu for this.
+            $grades = [];
+            $nograde = [-1 => get_string('nograde')];
+            for ($i = (int)$gradeitem->grademax; $i >= 0; $i--) {
+                $grades[$i] = $i .' / '. (int)$gradeitem->grademax;
+            }
+            $scaleoptions = $nograde + $grades;
         }
         // What happens if there's no scale?
         return $scaleoptions;
@@ -75,7 +86,8 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
     public function get_form_elements_for_user($grade, MoodleQuickForm $mform, stdClass $data, $userid) {
         global $USER;
         $scaleoptions = $this->get_scale();
-        if ($scaleoptions) {
+
+        if (count($scaleoptions) > 0) {
             if ($grade) {
                 $doublemarks = $this->get_doublemarks($grade->id);
             }
