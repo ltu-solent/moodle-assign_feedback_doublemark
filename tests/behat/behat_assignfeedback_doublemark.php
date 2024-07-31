@@ -61,7 +61,7 @@ class behat_assignfeedback_doublemark extends behat_base {
      */
     protected function get_assignment_cm_by_name(string $name): stdClass {
         global $DB;
-        $assign = $DB->get_record('assign', array('name' => $name), '*', MUST_EXIST);
+        $assign = $DB->get_record('assign', ['name' => $name], '*', MUST_EXIST);
         return get_coursemodule_from_instance('assign', $assign->id, $assign->course);
     }
 }

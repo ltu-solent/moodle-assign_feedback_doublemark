@@ -43,7 +43,7 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
      */
     public function get_doublemarks($gradeid) {
         global $DB;
-        return $DB->get_record('assignfeedback_doublemark', array('grade' => $gradeid));
+        return $DB->get_record('assignfeedback_doublemark', ['grade' => $gradeid]);
     }
 
     /**
@@ -302,8 +302,8 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
 
         $doublemarks = $this->get_doublemarks($grade->id);
         if ($doublemarks) {
-            $firstgrader = $DB->get_record('user', array('id' => $doublemarks->first_userid));
-            $secondgrader = $DB->get_record('user', array('id' => $doublemarks->second_userid));
+            $firstgrader = $DB->get_record('user', ['id' => $doublemarks->first_userid]);
+            $secondgrader = $DB->get_record('user', ['id' => $doublemarks->second_userid]);
             $grades = '';
             // Both grades have been set.
             if ($doublemarks->first_grade != -1 && $doublemarks->second_grade != -1) {
