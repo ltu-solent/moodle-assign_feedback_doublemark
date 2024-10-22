@@ -47,12 +47,14 @@ Feature: Testing doublemark_points in assignfeedback_doublemark
     And I press "Save and display"
     And I am on the "Test assignment name" "assignfeedback_doublemark > View all submissions" page
     Then I click on "Grade" "link" in the "Student 1" "table_row"
+    And I choose "Grade" in the open action menu
     And I set the field "First grade" to "100"
     And I press "Save changes"
     Then the "Second grade" "select" should be disabled
     Given I log in as "teacher2"
     And I am on the "Test assignment name" "assignfeedback_doublemark > View all submissions" page
     Then I click on "Grade" "link" in the "Student 1" "table_row"
+    And I choose "Grade" in the open action menu
     Then the "First grade" "select" should be disabled
     And I set the field "Second grade" to "65"
     And I press "Save changes"
@@ -62,6 +64,7 @@ Feature: Testing doublemark_points in assignfeedback_doublemark
     Given I log in as "teacher1"
     And I am on the "Test assignment name" "assignfeedback_doublemark > View all submissions" page
     And I click on "Grade" "link" in the "Student 1" "table_row"
+    And I choose "Grade" in the open action menu
     And I set the field "Agreed grade" to "83"
     And I press "Save changes"
     When I am on the "Test assignment name" "assignfeedback_doublemark > View all submissions" page

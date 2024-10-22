@@ -1,4 +1,4 @@
-@mod @mod_assign @assignfeedback @assignfeedback_doublemark @sol @solassignfeedback
+@mod @mod_assign @assignfeedback @assignfeedback_doublemark @sol @solassignfeedback @core_grades
 Feature: In an assignment, teachers can provide doublemarks on student submissions
   In order to provide feedback to students on their assignments
     As a teacher, and second marker
@@ -54,12 +54,14 @@ Feature: In an assignment, teachers can provide doublemarks on student submissio
     And I press "Save and display"
     And I am on the "Test assignment name" "assignfeedback_doublemark > View all submissions" page
     Then I click on "Grade" "link" in the "Student 1" "table_row"
+    And I choose "Grade" in the open action menu
     And I set the field "First grade" to "A1"
     And I press "Save changes"
     Then the "Second grade" "select" should be disabled
     Given I log in as "teacher2"
     And I am on the "Test assignment name" "assignfeedback_doublemark > View all submissions" page
     Then I click on "Grade" "link" in the "Student 1" "table_row"
+    And I choose "Grade" in the open action menu
     Then the "First grade" "select" should be disabled
     And I set the field "Second grade" to "B2"
     And I press "Save changes"
@@ -69,6 +71,7 @@ Feature: In an assignment, teachers can provide doublemarks on student submissio
     Given I log in as "teacher1"
     And I am on the "Test assignment name" "assignfeedback_doublemark > View all submissions" page
     And I click on "Grade" "link" in the "Student 1" "table_row"
+    And I choose "Grade" in the open action menu
     And I set the field "Agreed grade" to "A3"
     And I press "Save changes"
     And I am on the "Test assignment name" "assignfeedback_doublemark > View all submissions" page
