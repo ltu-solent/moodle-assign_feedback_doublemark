@@ -21,6 +21,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_solsits\sitsassign;
+
 /**
  * Double mark feedback class
  */
@@ -86,7 +88,13 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
     public function get_form_elements_for_user($grade, MoodleQuickForm $mform, stdClass $data, $userid) {
         global $USER;
         $scaleoptions = $this->get_scale();
-
+        $cm = $this->assignment->get_course_module();
+        $sitsassign = false;
+        if (method_exists('\local_solsits\helper', 'is_sits_assignment')) {
+            if (\local_solsits\helper::is_sits_assignment($this->assignment->get_course_module()->id)) {
+                $sitsassign = sitsassign::get_record(['cmid' => $cm->id]);
+            }
+        }
         if (count($scaleoptions) > 0) {
             if ($grade) {
                 $doublemarks = $this->get_doublemarks($grade->id);
@@ -102,6 +110,10 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
                             get_string('first_grade', 'assignfeedback_doublemark'),
                             $scaleoptions);
                         $mform->setType('assignfeedback_doublemark_first_grade', PARAM_INT);
+                        if ($sitsassign) {
+                            $mform->addHelpButton('assignfeedback_doublemark_first_grade', 'pointgrademarkmapping',
+                                'assignfeedback_doublemark');
+                        }
                         $selectfirst->setSelected($doublemarks->first_grade);
                         $mform->addElement('hidden', 'grader1_hidden', $doublemarks->first_userid);
                         $mform->setType('grader1_hidden', PARAM_INT);
@@ -113,6 +125,10 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
                             get_string('first_grade', 'assignfeedback_doublemark'),
                             $scaleoptions);
                         $mform->setType('assignfeedback_doublemark_first_grade', PARAM_INT);
+                        if ($sitsassign) {
+                            $mform->addHelpButton('assignfeedback_doublemark_first_grade', 'pointgrademarkmapping',
+                                'assignfeedback_doublemark');
+                        }
                     }
                     // Second marker has already graded. Set grade and hidden userid field for the second marker.
                     if ($doublemarks->second_grade != '-1') {
@@ -123,6 +139,10 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
                             $scaleoptions);
                         $mform->setType('assignfeedback_doublemark_second_grade', PARAM_INT);
                         $selectsecond->setSelected($doublemarks->second_grade);
+                        if ($sitsassign) {
+                            $mform->addHelpButton('assignfeedback_doublemark_second_grade', 'pointgrademarkmapping',
+                                'assignfeedback_doublemark');
+                        }
                         $mform->addElement('hidden', 'grader2_hidden', $doublemarks->second_userid);
                         $mform->setType('grader2_hidden', PARAM_INT);
                     } else {
@@ -132,6 +152,10 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
                             get_string('second_grade', 'assignfeedback_doublemark'),
                             $scaleoptions);
                         $mform->setType('assignfeedback_doublemark_second_grade', PARAM_INT);
+                        if ($sitsassign) {
+                            $mform->addHelpButton('assignfeedback_doublemark_second_grade', 'pointgrademarkmapping',
+                                'assignfeedback_doublemark');
+                        }
                     }
                     $mform->addElement('hidden', 'first_hidden', $doublemarks->first_grade);
                     $mform->setType('first_hidden', PARAM_INT);
@@ -144,11 +168,19 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
                         get_string('first_grade', 'assignfeedback_doublemark'),
                         $scaleoptions);
                     $mform->setType('assignfeedback_doublemark_first_grade', PARAM_INT);
+                    if ($sitsassign) {
+                        $mform->addHelpButton('assignfeedback_doublemark_first_grade', 'pointgrademarkmapping',
+                            'assignfeedback_doublemark');
+                    }
                     $mform->addElement('select',
                         'assignfeedback_doublemark_second_grade',
                         get_string('second_grade', 'assignfeedback_doublemark'),
                         $scaleoptions);
                     $mform->setType('assignfeedback_doublemark_second_grade', PARAM_INT);
+                    if ($sitsassign) {
+                        $mform->addHelpButton('assignfeedback_doublemark_second_grade', 'pointgrademarkmapping',
+                            'assignfeedback_doublemark');
+                    }
                     $mform->addElement('hidden', 'first_hidden', -1);
                     $mform->setType('first_hidden', PARAM_INT);
                     $mform->addElement('hidden', 'second_hidden', -1);
