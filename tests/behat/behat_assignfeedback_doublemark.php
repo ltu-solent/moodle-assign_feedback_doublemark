@@ -49,6 +49,8 @@ class behat_assignfeedback_doublemark extends behat_base {
                 $cm = $this->get_assignment_cm_by_name($identifier);
                 return new moodle_url('/mod/assign/view.php', ['id' => $cm->id, 'action' => 'grading']);
                 break;
+            default:
+                throw new Exception("Unrecognised page type '{$type}'.");
         }
     }
 
