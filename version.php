@@ -27,4 +27,4 @@ $plugin->version  = 2025052800;
 $plugin->requires = 2024100700;
 $plugin->release = "4.5";
 $plugin->component = 'assignfeedback_doublemark';
-$plugin->supported = [405, 500];
+$plugin->supported = [405, 502];

@@ -23,7 +23,11 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$settings->add(new admin_setting_configcheckbox('assignfeedback_doublemark/default',
-                   new lang_string('default', 'assignfeedback_doublemark'),
-                   new lang_string('default_help', 'assignfeedback_doublemark'), 0));
-
+$settings->add(
+    new admin_setting_configcheckbox(
+        'assignfeedback_doublemark/default',
+        new lang_string('default', 'assignfeedback_doublemark'),
+        new lang_string('default_help', 'assignfeedback_doublemark'),
+        0
+    )
+);

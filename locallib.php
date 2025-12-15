@@ -27,7 +27,6 @@ use local_solsits\sitsassign;
  * Double mark feedback class
  */
 class assign_feedback_doublemark extends assign_feedback_plugin {
-
     /**
      * Get the name of the doublemark feedback plugin.
      *
@@ -68,7 +67,7 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
             $grades = [];
             $nograde = [-1 => get_string('nograde')];
             for ($i = (int)$gradeitem->grademax; $i >= 0; $i--) {
-                $grades[$i] = $i .' / '. (int)$gradeitem->grademax;
+                $grades[$i] = $i . ' / ' . (int)$gradeitem->grademax;
             }
             $scaleoptions = $nograde + $grades;
         }
@@ -108,11 +107,15 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
                             'select',
                             'assignfeedback_doublemark_first_grade',
                             get_string('first_grade', 'assignfeedback_doublemark'),
-                            $scaleoptions);
+                            $scaleoptions
+                        );
                         $mform->setType('assignfeedback_doublemark_first_grade', PARAM_INT);
                         if ($sitsassign) {
-                            $mform->addHelpButton('assignfeedback_doublemark_first_grade', 'pointgrademarkmapping',
-                                'assignfeedback_doublemark');
+                            $mform->addHelpButton(
+                                'assignfeedback_doublemark_first_grade',
+                                'pointgrademarkmapping',
+                                'assignfeedback_doublemark'
+                            );
                         }
                         $selectfirst->setSelected($doublemarks->first_grade);
                         $mform->addElement('hidden', 'grader1_hidden', $doublemarks->first_userid);
@@ -123,11 +126,15 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
                             'select',
                             'assignfeedback_doublemark_first_grade',
                             get_string('first_grade', 'assignfeedback_doublemark'),
-                            $scaleoptions);
+                            $scaleoptions
+                        );
                         $mform->setType('assignfeedback_doublemark_first_grade', PARAM_INT);
                         if ($sitsassign) {
-                            $mform->addHelpButton('assignfeedback_doublemark_first_grade', 'pointgrademarkmapping',
-                                'assignfeedback_doublemark');
+                            $mform->addHelpButton(
+                                'assignfeedback_doublemark_first_grade',
+                                'pointgrademarkmapping',
+                                'assignfeedback_doublemark'
+                            );
                         }
                     }
                     // Second marker has already graded. Set grade and hidden userid field for the second marker.
@@ -136,25 +143,34 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
                             'select',
                             'assignfeedback_doublemark_second_grade',
                             get_string('second_grade', 'assignfeedback_doublemark'),
-                            $scaleoptions);
+                            $scaleoptions
+                        );
                         $mform->setType('assignfeedback_doublemark_second_grade', PARAM_INT);
                         $selectsecond->setSelected($doublemarks->second_grade);
                         if ($sitsassign) {
-                            $mform->addHelpButton('assignfeedback_doublemark_second_grade', 'pointgrademarkmapping',
-                                'assignfeedback_doublemark');
+                            $mform->addHelpButton(
+                                'assignfeedback_doublemark_second_grade',
+                                'pointgrademarkmapping',
+                                'assignfeedback_doublemark'
+                            );
                         }
                         $mform->addElement('hidden', 'grader2_hidden', $doublemarks->second_userid);
                         $mform->setType('grader2_hidden', PARAM_INT);
                     } else {
                         // Display grade options for Second marker.
-                        $mform->addElement('select',
+                        $mform->addElement(
+                            'select',
                             'assignfeedback_doublemark_second_grade',
                             get_string('second_grade', 'assignfeedback_doublemark'),
-                            $scaleoptions);
+                            $scaleoptions
+                        );
                         $mform->setType('assignfeedback_doublemark_second_grade', PARAM_INT);
                         if ($sitsassign) {
-                            $mform->addHelpButton('assignfeedback_doublemark_second_grade', 'pointgrademarkmapping',
-                                'assignfeedback_doublemark');
+                            $mform->addHelpButton(
+                                'assignfeedback_doublemark_second_grade',
+                                'pointgrademarkmapping',
+                                'assignfeedback_doublemark'
+                            );
                         }
                     }
                     $mform->addElement('hidden', 'first_hidden', $doublemarks->first_grade);
@@ -163,23 +179,33 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
                     $mform->setType('second_hidden', PARAM_INT);
                 } else {
                     // No grades have been saved yet.
-                    $mform->addElement('select',
+                    $mform->addElement(
+                        'select',
                         'assignfeedback_doublemark_first_grade',
                         get_string('first_grade', 'assignfeedback_doublemark'),
-                        $scaleoptions);
+                        $scaleoptions
+                    );
                     $mform->setType('assignfeedback_doublemark_first_grade', PARAM_INT);
                     if ($sitsassign) {
-                        $mform->addHelpButton('assignfeedback_doublemark_first_grade', 'pointgrademarkmapping',
-                            'assignfeedback_doublemark');
+                        $mform->addHelpButton(
+                            'assignfeedback_doublemark_first_grade',
+                            'pointgrademarkmapping',
+                            'assignfeedback_doublemark'
+                        );
                     }
-                    $mform->addElement('select',
+                    $mform->addElement(
+                        'select',
                         'assignfeedback_doublemark_second_grade',
                         get_string('second_grade', 'assignfeedback_doublemark'),
-                        $scaleoptions);
+                        $scaleoptions
+                    );
                     $mform->setType('assignfeedback_doublemark_second_grade', PARAM_INT);
                     if ($sitsassign) {
-                        $mform->addHelpButton('assignfeedback_doublemark_second_grade', 'pointgrademarkmapping',
-                            'assignfeedback_doublemark');
+                        $mform->addHelpButton(
+                            'assignfeedback_doublemark_second_grade',
+                            'pointgrademarkmapping',
+                            'assignfeedback_doublemark'
+                        );
                     }
                     $mform->addElement('hidden', 'first_hidden', -1);
                     $mform->setType('first_hidden', PARAM_INT);
@@ -188,14 +214,18 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
                 }
             } else {
                 // Grades have been locked for this assignment, so display the grades as text rather than a form.
-                $mform->addElement('static',
+                $mform->addElement(
+                    'static',
                     'description',
                     get_string('first_grade', 'assignfeedback_doublemark'),
-                    $scaleoptions[$doublemarks->first_grade]);
-                $mform->addElement('static',
+                    $scaleoptions[$doublemarks->first_grade]
+                );
+                $mform->addElement(
+                    'static',
                     'description',
                     get_string('second_grade', 'assignfeedback_doublemark'),
-                    $scaleoptions[$doublemarks->second_grade]);
+                    $scaleoptions[$doublemarks->second_grade]
+                );
             }
             // Re-arrange form elements so double marking comes first.
             // Get the header.
@@ -265,8 +295,10 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
         }
 
         if ($doublemarks) {
-            if ($doublemarks->first_grade == $data->assignfeedback_doublemark_first_grade &&
-                    $doublemarks->second_grade == $data->assignfeedback_doublemark_second_grade) {
+            if (
+                $doublemarks->first_grade == $data->assignfeedback_doublemark_first_grade &&
+                $doublemarks->second_grade == $data->assignfeedback_doublemark_second_grade
+            ) {
                 return false;
             }
         } else {
@@ -286,12 +318,16 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
         global $DB, $USER;
         $doublemarks = $this->get_doublemarks($grade->id);
         if ($doublemarks) {
-            if (isset($data->assignfeedback_doublemark_first_grade)
-                    && $data->assignfeedback_doublemark_first_grade !== $doublemarks->first_grade) {
-                $doublemarks->first_grade = $data->assignfeedback_doublemark_first_grade;;
+            if (
+                isset($data->assignfeedback_doublemark_first_grade) &&
+                $data->assignfeedback_doublemark_first_grade !== $doublemarks->first_grade
+            ) {
+                $doublemarks->first_grade = $data->assignfeedback_doublemark_first_grade;
                 $doublemarks->first_userid = ($data->assignfeedback_doublemark_first_grade == -1 ? 0 : $USER->id);
-            } else if (isset($data->assignfeedback_doublemark_second_grade)
-                    && $data->assignfeedback_doublemark_second_grade !== $doublemarks->second_grade) {
+            } else if (
+                isset($data->assignfeedback_doublemark_second_grade) &&
+                $data->assignfeedback_doublemark_second_grade !== $doublemarks->second_grade
+            ) {
                 $doublemarks->second_grade =
                 (
                     $data->assignfeedback_doublemark_second_grade != null ||
@@ -325,7 +361,7 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
      * @param bool $showviewlink Set to true to show a link to view the full feedback
      * @return string
      */
-    public function view_summary(stdClass $grade, & $showviewlink) {
+    public function view_summary(stdClass $grade, &$showviewlink) {
         global $DB;
         $scaleoptions = $this->get_scale();
         if (!$scaleoptions) {
@@ -357,5 +393,4 @@ class assign_feedback_doublemark extends assign_feedback_plugin {
 
         return '';
     }
-
 }
